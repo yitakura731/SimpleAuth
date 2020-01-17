@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  db:
+    image: yitakura731/simple-auth-db
+    build:
+      context: ./sa-db/
+      dockerfile: Dockerfile
+    container_name: sa-db
+    restart: always
+    ports:
+      - 3306:3306
+    env_file:
+      - ./sa-db/db.env
+    volumes:
+      - '/SimpleAuth/sa-storage/db:/var/lib/mariadb'
+  
+  svc:
+    image: yitakura731/simple-auth-svc
+    build:
+      context: ./sa-auth/
+      dockerfile: Dockerfile
+    container_name: sa-auth
+    env_file:
+      - ./sa-auth/auth.env
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - db
