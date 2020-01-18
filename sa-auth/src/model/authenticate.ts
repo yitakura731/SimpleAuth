@@ -3,7 +3,7 @@ import * as i18Next from 'i18next';
 import * as jwt from 'jsonwebtoken';
 import * as Passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { Strategy as GitHubStrategy } from 'passport-github';
+import { Strategy, Strategy as GitHubStrategy } from 'passport-github';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as passportJWT from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -47,6 +47,7 @@ Passport.use(
                 userId: result[0].USERID,
                 userNameJa: result[0].NAME_JA,
                 userNameEn: result[0].NAME_EN,
+                strategy: 'local',
               };
               return cb(null, user);
             }
@@ -80,6 +81,7 @@ Passport.use(
               userId: result[0].USERID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
+              strategy: 'facebook',
             };
             return cb(null, user);
           } else {
@@ -112,6 +114,7 @@ Passport.use(
               userId: result[0].USERID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
+              strategy: 'github',
             };
             return cb(null, user);
           } else {
@@ -138,11 +141,12 @@ Passport.use(
           return result;
         })
         .then((result: any[]) => {
-          if (result.length > 0) {
+          if (result.length === 1) {
             const user: authUser = {
               userId: result[0].USERID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
+              strategy: jwtPayload.strategy,
             };
             return cb(null, user);
           } else {
@@ -155,10 +159,11 @@ Passport.use(
 );
 
 export default class Authenticate {
-  public createToken(user: any) {
+  public createToken(user: any, strategy: string) {
     return jwt.sign(
       {
-        id: user.id,
+        id: user.userId,
+        strategy,
       },
       'simple_repository',
       { expiresIn: '300m' },
@@ -167,8 +172,11 @@ export default class Authenticate {
 
   public getUser(user: any) {
     return {
-      id: user.id,
-      name: user.username,
+      id: user.userId,
+      name: {
+        ja: user.userNameJa,
+        en: user.userNameEn,
+      },
       strategy: user.strategy,
     };
   }

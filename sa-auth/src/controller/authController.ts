@@ -47,7 +47,7 @@ authController.post('/login/local', cors(), (req: Express.Request, res: Express.
     if (err || !user) {
       return res.status(400).json({ info });
     }
-    const token = auth.createToken(user);
+    const token = auth.createToken(user, 'local');
     return res.status(200).json({ accessToken: `Bearer ${token}` });
   })(req, res, next);
 });
@@ -64,7 +64,7 @@ authController.get(
   cors(),
   passport.authenticate('facebook', { session: false }),
   (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
-    const token = auth.createToken(req.user);
+    const token = auth.createToken(req.user, 'facebook');
     res.cookie('sr.auth.token', `Bearer ${token}`);
     return res.redirect(301, `/${process.env.APP_NAME}/home`);
   },
@@ -82,7 +82,7 @@ authController.get(
   cors(),
   passport.authenticate('github', { session: false }),
   (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
-    const token = auth.createToken(req.user);
+    const token = auth.createToken(req.user, 'github');
     res.cookie('sr.auth.token', `Bearer ${token}`);
     return res.redirect(301, `/${process.env.APP_NAME}/home`);
   },
