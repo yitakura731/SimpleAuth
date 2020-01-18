@@ -3,7 +3,7 @@ import * as i18Next from 'i18next';
 import * as jwt from 'jsonwebtoken';
 import * as Passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
-import { Strategy, Strategy as GitHubStrategy } from 'passport-github';
+import { Strategy as GitHubStrategy } from 'passport-github';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import * as passportJWT from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -26,14 +26,14 @@ const mysqlConfig = {
 Passport.use(
   new LocalStrategy(
     {
+      usernameField: 'loginId',
       passwordField: 'password',
-      usernameField: 'userId',
     },
-    (userId: string, password: string, cb: any) => {
+    (loginId: string, password: string, cb: any) => {
       mysql
         .createConnection(mysqlConfig)
         .then((conn) => {
-          const result = conn.query('SELECT * FROM USER WHERE USERID = ?', [userId]);
+          const result = conn.query('SELECT * FROM USER WHERE LOGINID = ?', [loginId]);
           conn.end();
           return result;
         })
@@ -45,6 +45,7 @@ Passport.use(
             } else {
               const user: authUser = {
                 userId: result[0].USERID,
+                loginId: result[0].LOGINID,
                 userNameJa: result[0].NAME_JA,
                 userNameEn: result[0].NAME_EN,
                 strategy: 'local',
@@ -79,6 +80,7 @@ Passport.use(
           if (result.length > 0) {
             const user: authUser = {
               userId: result[0].USERID,
+              loginId: result[0].LOGINID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
               strategy: 'facebook',
@@ -112,6 +114,7 @@ Passport.use(
           if (result.length > 0) {
             const user: authUser = {
               userId: result[0].USERID,
+              loginId: result[0].LOGINID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
               strategy: 'github',
@@ -136,7 +139,7 @@ Passport.use(
       mysql
         .createConnection(mysqlConfig)
         .then((conn) => {
-          const result = conn.query('SELECT * FROM USER WHERE USERID = ?', [jwtPayload.id]);
+          const result = conn.query('SELECT * FROM USER WHERE USERID = ?', [jwtPayload.userId]);
           conn.end();
           return result;
         })
@@ -144,6 +147,7 @@ Passport.use(
           if (result.length === 1) {
             const user: authUser = {
               userId: result[0].USERID,
+              loginId: result[0].LOGINID,
               userNameJa: result[0].NAME_JA,
               userNameEn: result[0].NAME_EN,
               strategy: jwtPayload.strategy,
@@ -162,7 +166,7 @@ export default class Authenticate {
   public createToken(user: any, strategy: string) {
     return jwt.sign(
       {
-        id: user.userId,
+        userId: user.userId,
         strategy,
       },
       'simple_repository',
@@ -172,7 +176,8 @@ export default class Authenticate {
 
   public getUser(user: any) {
     return {
-      id: user.userId,
+      userId: user.userId,
+      loginId: user.loginId,
       name: {
         ja: user.userNameJa,
         en: user.userNameEn,

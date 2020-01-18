@@ -30,7 +30,7 @@ const authController = Express.Router();
  *          schema:
  *            type: object
  *            properties:
- *              userId:
+ *              loginId:
  *                type: "string"
  *                example: admin
  *              password:
