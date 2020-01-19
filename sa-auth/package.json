@@ -4,10 +4,10 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon --inspect=5858 -r ts-node/register ./src/server.ts",
     "start": "ts-node dist/server.js",
     "build": "tsc -p .",
-    "nodemon": "nodemon ./dist/server.js",
+    "nodemon": "nodemon --inspect=5858 -r ts-node/register ./src/server.ts",
     "watch": "tsc -w"
   },
   "dependencies": {

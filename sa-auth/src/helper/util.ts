@@ -13,8 +13,4 @@ export default class Util {
       throw new TypeError(message);
     }
   }
-
-  public static getRedirectWebAppURL() {
-    return `${process.env.WEB_SERVER_REDIRECT_URL}`;
-  }
 }

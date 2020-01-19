@@ -66,7 +66,7 @@ authController.get(
   (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
     const token = auth.createToken(req.user, 'facebook');
     res.cookie('sr.auth.token', `Bearer ${token}`);
-    return res.redirect(301, `/${process.env.APP_NAME}/home`);
+    return res.redirect(301, `${process.env.OAUTH_REDIRECT_URL}`);
   },
 );
 
@@ -84,7 +84,7 @@ authController.get(
   (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
     const token = auth.createToken(req.user, 'github');
     res.cookie('sr.auth.token', `Bearer ${token}`);
-    return res.redirect(301, `/${process.env.APP_NAME}/home`);
+    return res.redirect(301, `${process.env.OAUTH_REDIRECT_URL}`);
   },
 );
 

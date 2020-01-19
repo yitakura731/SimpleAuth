@@ -38,7 +38,7 @@ Passport.use(
           return result;
         })
         .then((result: any[]) => {
-          if (result.length > 0) {
+          if (result.length === 1) {
             const storedPassword: string = result[0].PASSWORD;
             if (storedPassword !== password) {
               return cb(null, false, { message: i18next.t('incorrectUser') });
@@ -48,7 +48,7 @@ Passport.use(
                 loginId: result[0].LOGINID,
                 userNameJa: result[0].NAME_JA,
                 userNameEn: result[0].NAME_EN,
-                strategy: 'local',
+                strategy: 'local2',
               };
               return cb(null, user);
             }
@@ -64,7 +64,7 @@ Passport.use(
 Passport.use(
   new FacebookStrategy(
     {
-      callbackURL: `${util.getRedirectWebAppURL()}/api/auth/login/facebook/callback`,
+      callbackURL: `${process.env.OAUTH_CALLBACK_URL}/api/auth/login/facebook/callback`,
       clientID: process.env.FACEBOOK_CLIENT_ID || 'dummy',
       clientSecret: process.env.FACEBOOK_CLIENT_SECREAT || 'dummy',
     },
@@ -98,7 +98,7 @@ Passport.use(
 Passport.use(
   new GitHubStrategy(
     {
-      callbackURL: `${util.getRedirectWebAppURL()}/api/auth/login/github/callback`,
+      callbackURL: `${process.env.OAUTH_CALLBACK_URL}/api/auth/login/github/callback`,
       clientID: process.env.GITHUB_CLIENT_ID || 'dummy',
       clientSecret: process.env.GITHUB_CLIENT_SECREAT || 'dummy',
     },
