@@ -9,3 +9,8 @@ CREATE TABLE USER (
   GOOGLE_UID   VARCHAR(256),
   PRIMARY KEY (USERID)
 );
+
+INSERT INTO USER(
+    USERID, LOGINID, NAME_JA, NAME_EN, PASSWORD) 
+  VALUES (
+    0, 'admin', '管理者', 'administrator', 'admin');
