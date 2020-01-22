@@ -76,6 +76,8 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 });
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  // tslint:disable-next-line: no-console
+  console.log(err);
   if (boom.isBoom(err)) {
     res.status(err.output.statusCode).json(err.output.payload);
   } else if (err instanceof TypeError) {
