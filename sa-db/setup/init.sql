@@ -14,3 +14,8 @@ INSERT INTO USER(
     USERID, LOGINID, NAME_JA, NAME_EN, PASSWORD) 
   VALUES (
     0, 'admin', '管理者', 'administrator', 'admin');
+
+INSERT INTO USER(
+    USERID, LOGINID, NAME_JA, NAME_EN, PASSWORD) 
+  VALUES (
+    1, 'itakura', '板倉', 'itakura', 'itakura');
