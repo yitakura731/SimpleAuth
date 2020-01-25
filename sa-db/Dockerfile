@@ -4,4 +4,4 @@ FROM mariadb/server
 COPY ./setup/init.sql /docker-entrypoint-initdb.d/
 
 # 文字コードをUTF8に設定
-COPY ./charset.cnf /etc/mariadb.conf.d/
+COPY ./charset.cnf /etc/mysql/mariadb.conf.d/
